@@ -1,0 +1,18 @@
+{
+    "mls": "MlsNumber",
+    "listing_description": "PublicRemarks",
+    "total_bathrooms": "Building.BathroomTotal",
+    "total_bedrooms": "Building.Bedrooms",
+    "size": "Building.SizeInterior",
+    "total_stories": "Building.StoriesTotal",
+    "house_type": "Building.Type",
+    "house_ammenities": "Building.Ammenities",
+    "listing_price": "Property.PriceUnformattedValue",
+    "listing_address": "Property.Address.AddressText",
+    "listing_address_lat": "Property.Address.Latitude",
+    "listing_address_long": "Property.Address.Longitude",
+    "listing_ownership_type": "Property.OwnershipType",
+    "lising_nearby_ammenities": "Property.AmmenitiesNearBy",
+    "open_house": "OpenHouse->FormattedDateTime",
+    "listing_website": "RelativeDetailsURL"
+}
