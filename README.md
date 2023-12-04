@@ -1,4 +1,7 @@
-# pyRealtor
+<p align='center'>
+    <img src="pyRealtor.png" width="300" height="300" />
+</p>
+
 
 pyRealtor is a python package that provides fast an easy way to extract Multiple Listing Service (MLS) details, such as house sale/rent price, number of bedrooms, stories, ammenities nearby etc. of any city within Canada. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
 
@@ -6,18 +9,21 @@ pyRealtor can be used to
 - Analyze all real estate listing in a specific area.
 - Find only **Open House** on a specifc day in a particular area.
 
-## Installation
+## Installing
 
-- Cloning the source code
+- The easiest way to install the library is to execute (preferably in a virtualenv) the command:
+
+```shell
+pip install pyRealtor
+```
+
+2. From the source code
 ```shell
 git clone https://github.com/rachitt96/pyRealtor.git
 cd pyRealtor
+python setup.py install
 ```
 
-- Installing the package
-```shell
-pip install --upgrade .
-```
 
 ### Usage
 
