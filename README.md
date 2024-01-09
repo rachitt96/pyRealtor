@@ -1,12 +1,21 @@
 <p align='center'>
-    <img src="pyRealtor.png" width="300" height="300" />
+    <img src="https://github.com/rachitt96/pyRealtor/blob/main/pyRealtor.png?raw=true" width="300" height="300" />
 </p>
 
 
-pyRealtor is a python package that provides fast an easy way to extract Multiple Listing Service (MLS) details, such as house sale/rent price, number of bedrooms, stories, ammenities nearby etc. of any city within Canada. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
+[![PyPI](https://img.shields.io/pypi/v/pyrealtor?label=pypi)](https://pypi.org/project/pyRealtor/)
+[![Downloads](https://img.shields.io/pepy/dt/pyrealtor
+)](https://pepy.tech/project/pyRealtor)
+[![Python](https://img.shields.io/badge/Python-3.6%20%7C%203.7%20%7C%203.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://badge.fury.io/py/pyrealtor)
+[![PyPI - License](https://img.shields.io/pypi/l/pyrealtor?color=yellow)](https://github.com/rachitt96/pyRealtor/blob/main/LICENSE.md)
+
+
+
+
+pyRealtor is a python package that provides fast and easy way to extract Multiple Listing Service (MLS) details from REALTOR.CA, such as house sale/rent price, number of bedrooms, stories, ammenities nearby etc. of any city / region within Canada. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
 
 pyRealtor can be used to 
-- Analyze all real estate listing in a specific area.
+- Analyze and extract all real estate listing in a specific area.
 - Find only **Open House** on a specifc day in a particular area.
 
 ## Installing
@@ -17,7 +26,7 @@ pyRealtor can be used to
 pip install pyRealtor
 ```
 
-2. From the source code
+- From the source code
 ```shell
 git clone https://github.com/rachitt96/pyRealtor.git
 cd pyRealtor
@@ -62,3 +71,11 @@ house_obj.search_save_houses(
     open_house_date = '10/29/2023'
 )
 ```
+
+### Terms of Use
+
+pyRealtor is a tool to extract, filter and analyze publicly accessible MLS listings provided by REALTOR.CA. More information on the use of this data can be found on REALTOR.CA website: [https://www.realtor.ca/terms-of-use](https://www.realtor.ca/terms-of-use)
+
+
+> "REALTOR.CA website/database is a copyright-protected work which is owned by CREA. Part of the contents of REALTOR.CA website/database, including all real estate listings and related information, images and photographs (collectively, "Listing Content"), are also protected by copyright, which is owned by the CREA members who supplied the content and/or by third parties, and is reproduced in REALTOR.CA website/database under license. The contents of REALTOR.CA website/database, including the Listing Content, are intended for the private, non-commercial use by individuals. Any commercial use of the website/database, including the Listing Content, in whole or in part, directly or indirectly, is specifically forbidden except with the prior written authority of the owner of the copyright."
+
