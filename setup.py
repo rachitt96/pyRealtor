@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name = 'pyRealtor',
-    version = '0.1.3',
+    version = '0.1.4',
     description = 'Python package for fetching and analyzing REALTOR.CA MLS Listings',
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -22,7 +22,8 @@ setup(
         'requests>=2.26.0',
         'pandas>=1.3.5',
         'numpy>=1.21.4',
-        'openpyxl>=3.1.2'
+        'openpyxl>=3.1.2',
+        'lxml>=5.1.0'
     ],
     extras_required = {
         "dev": ["twine"]

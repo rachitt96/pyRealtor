@@ -48,6 +48,19 @@ house_obj.search_save_houses(
 )
 ```
 
+RELTOR.CA API has the rate limit, and it may block IP in case you trigger API multiple times in short period. In that case, you can use `use_proxy` argument. 
+
+```python
+import pyRealtor
+
+house_obj = pyRealtor.HousesFacade()
+house_obj.search_save_houses(
+    search_area='Barrhaven',
+    report_file_name='barrhaven_all_listings.xlsx',
+    use_proxy=True
+)
+```
+
 2. To get only Open House listings in a specific area
 
 ```python

@@ -1,7 +1,9 @@
 import requests
+from requests.adapters import HTTPAdapter, Retry
 
 from pyRealtor.geo import GeoLocationService
 from pyRealtor.report import ReportingService
+from pyRealtor.proxy import Proxy
 
 class RealtorService:
 
@@ -12,7 +14,8 @@ class RealtorService:
             'ApplicationId': '1',
             'CultureId': '1',
             'Currency': 'CAD',
-            'RecordsPerPage': 200
+            'RecordsPerPage': 200,
+            'MaximumResults': 600
         }
         self.search_api_headers = {
             "Accept": "*/*",
@@ -87,7 +90,13 @@ class RealtorService:
         self.search_api_params["OpenHouseStartDate"] = open_house_date
         self.search_api_params["OpenHouseEndDate"] = open_house_date
 
-    def search_houses(self):
+    def set_min_amount(self, new_amount, col_name):
+        if col_name not in ['Price', 'Rent']:
+            raise Exception(f"col_name must be either Price or Rent, however found {col_name}")
+        api_param_key = f"{col_name}Min"
+        self.search_api_params[api_param_key] = new_amount
+    
+    def search_houses(self, use_proxy = False):
         search_result = None
         json_search_payload = self.search_api_params.copy()
         current_page_number = 1
@@ -95,7 +104,13 @@ class RealtorService:
 
         try:
             s = requests.Session()
+            retries = Retry(
+                total=3,
+                backoff_factor=0.1,
+                status_forcelist=[ 500, 502, 503, 504 ]
+            )
 
+            s.mount('http://', HTTPAdapter(max_retries=retries))
             
             
             get_api_response = s.get(
@@ -112,59 +127,102 @@ class RealtorService:
 
             s.headers.update(self.search_api_headers)
 
-            #print(s.cookies.get_dict())
-            
-
-            """
-            reeser84_token_res = s.post(
-                "https://www.realtor.ca/dnight-Exit-shall-Braith-Then-why-vponst-is-proc",
-                params={'d': 'www.realtor.ca'},
-                json = {"solution":{"interrogation":None,"version":"beta"},"old_token":None,"error":None,"performance":{"interrogation":1897}}
-            )
-            if reeser84_token_res.status_code == 200:
-                token = reeser84_token_res.json()["token"]
-                s.headers.update({'reese84': token})
-            print(reeser84_token_res.status_code)
-            print(reeser84_token_res.text)
-            sys.exit(0)
-            """
-
             json_search_payload['CurrentPage'] = str(current_page_number)
-            realtor_api_response = s.post(
-                self.search_api_endpoint,
-                headers=self.search_api_headers,
-                data = json_search_payload
-            )
+
+            if use_proxy:
+                proxy = Proxy()
+                proxy.set_proxies()
+
+                while proxy.rotate_proxy():
+                    try:
+                        print(f"Using proxy with IP Address: {proxy.current_proxy}")
+                        realtor_api_response = s.post(
+                            self.search_api_endpoint,
+                            headers=self.search_api_headers,
+                            data = json_search_payload,
+                            proxies = {
+                                'http': proxy.current_proxy, 
+                                'https': proxy.current_proxy
+                            }
+                        )
+
+                        if realtor_api_response.status_code == 200:
+                            break
+                        elif realtor_api_response.status_code == 403:
+                            print(f"Proxy {proxy.current_proxy} is blocked by REALTOR.CA")
+                            continue
+
+                    except requests.exceptions.ProxyError as proxyException:
+                        continue
+                    except requests.exceptions.ConnectionError as connectionException:
+                        continue
+                
+            else:
+                realtor_api_response = s.post(
+                    self.search_api_endpoint,
+                    headers=self.search_api_headers,
+                    data = json_search_payload
+                )
 
             
             if realtor_api_response.status_code == 200:
                 search_result = realtor_api_response.json()
                 self.report_obj.house_json_lst.extend(search_result["Results"])
-
-                
-
                 total_available_pages = search_result["Paging"]["TotalPages"]
-
-                #print(total_available_pages)
+     
                 while current_page_number < total_available_pages:
                     current_page_number += 1
                     json_search_payload['CurrentPage'] = str(current_page_number)
                     
                     #time.sleep(1000)
 
-                    realtor_api_response = s.post(
-                        self.search_api_endpoint,
-                        headers=self.search_api_headers,
-                        data = json_search_payload
-                    )
-                    #print(s.cookies.get_dict())
+                    if use_proxy:
+                        realtor_api_response = None
+                        while proxy.rotate_proxy():
+                            try:
+                                print(f"Using proxy with IP Address: {proxy.current_proxy}")
+                                realtor_api_response = s.post(
+                                    self.search_api_endpoint,
+                                    headers=self.search_api_headers,
+                                    data = json_search_payload,
+                                    proxies = {
+                                        'http': proxy.current_proxy, 
+                                        'https': proxy.current_proxy
+                                    }
+                                )
+                                if realtor_api_response.status_code == 200:
+                                    break
+                                elif realtor_api_response.status_code == 403:
+                                    print(f"Proxy {proxy.current_proxy} is blocked by REALTOR.CA")
+                                    continue
+                                else:
+                                    continue
+                                
+                            
+                            except requests.exceptions.ProxyError as proxyException:
+                                continue
 
-                    if realtor_api_response.status_code == 200:
+                            except requests.exceptions.ConnectionError as connectionException:
+                                continue
+
+                    else:
+                        realtor_api_response = s.post(
+                            self.search_api_endpoint,
+                            headers=self.search_api_headers,
+                            data = json_search_payload
+                        )
+                        #print(s.cookies.get_dict())
+
+                    if realtor_api_response is None:
+                        listings_received = len(self.report_obj.house_json_lst)
+                        print(f"Total listings received: {listings_received}, no more proxies available to connect, please try after some time")
+                    elif realtor_api_response.status_code == 200:
                         search_result = realtor_api_response.json()
                         self.report_obj.house_json_lst.extend(search_result["Results"])
-                    else:
-                        print(realtor_api_response.status_code)
-                        raise
+                    
+            elif realtor_api_response.status_code == 403:
+                print("IP address is blocked by REALTOR.CA, please try using Proxy with parameter use_proxy=True")
+
         except Exception as e:
             raise
 

@@ -49,6 +49,9 @@ class GeoLocationService:
             geo_res_json = None
             max_importance = 0
 
+            if len(geo_res_json_lst) == 0:
+                raise Exception(f"pyRealtor is only for Canadian region, area {city} not found in Canada")
+
             for geo_json in geo_res_json_lst:
                 if "canada" in geo_json["display_name"].lower() and geo_json["importance"] >= max_importance:
                     geo_res_json = geo_json
