@@ -17,5 +17,7 @@
     "Website": "RelativeDetailsURL",
     "Rent": "Property.LeaseRent",
     "Posted Days": "TimeOnRealtor",
-    "InsertedDateUTC": "InsertedDateUTC"
+    "InsertedDateUTC": "InsertedDateUTC",
+    "Realtor Name": "Individual->Name",
+    "Realtor Brokerage": "Individual->Organization.Name"
 }

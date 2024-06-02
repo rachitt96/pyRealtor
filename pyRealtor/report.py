@@ -1,6 +1,7 @@
 import json
 import importlib.resources
 import pkg_resources
+import re
 
 import pandas as pd
 
@@ -36,12 +37,31 @@ class ReportingService:
             dataframe_row_values = []
             for col_to_report in self.column_lst:
                 json_copy = mls_listing_json.copy()
-                col_hierarchy_lst = self.column_mapping_dict[col_to_report].split(".")
-                for col_hierarchy in col_hierarchy_lst:
-                    if col_hierarchy in json_copy:
-                        json_copy = json_copy[col_hierarchy]
+
+                if "->" in self.column_mapping_dict[col_to_report]:
+                    col_hierarchy_lst = self.column_mapping_dict[col_to_report].split("->")
+                    if (len(col_hierarchy_lst) == 2) and (col_hierarchy_lst[0] in json_copy):
+                        json_copy = ";".join(
+                            filter(
+                                None,
+                                [
+                                    ele[col_hierarchy_lst[1]] if col_hierarchy_lst[1] in ele else 
+                                    ele[col_hierarchy_lst[1].split(".")[0]][col_hierarchy_lst[1].split(".")[1]] if (col_hierarchy_lst[1].split(".")[0] in ele) and (col_hierarchy_lst[1].split(".")[1] in ele[col_hierarchy_lst[1].split(".")[0]]) else 
+                                    ''
+                                    for ele in json_copy[col_hierarchy_lst[0]] 
+                                ]
+                            )
+                        )
                     else:
                         json_copy = ''
+                    
+                else:
+                    col_hierarchy_lst = self.column_mapping_dict[col_to_report].split(".")
+                    for col_hierarchy in col_hierarchy_lst:
+                        if col_hierarchy in json_copy:
+                            json_copy = json_copy[col_hierarchy]
+                        else:
+                            json_copy = ''
                 dataframe_row_values.append(json_copy)
             dataframe_values.append(dataframe_row_values)
         

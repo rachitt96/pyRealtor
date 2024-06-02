@@ -152,6 +152,8 @@ class RealtorService:
                             print(f"Proxy {proxy.current_proxy} is blocked by REALTOR.CA")
                             continue
 
+                    except requests.exceptions.ChunkedEncodingError as chunkEncodingException:
+                        continue
                     except requests.exceptions.ProxyError as proxyException:
                         continue
                     except requests.exceptions.ConnectionError as connectionException:
@@ -198,7 +200,9 @@ class RealtorService:
                                 else:
                                     continue
                                 
-                            
+                            except requests.exceptions.ChunkedEncodingError as chunkEncodingException:
+                                continue
+
                             except requests.exceptions.ProxyError as proxyException:
                                 continue
 
