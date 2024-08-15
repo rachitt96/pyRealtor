@@ -1,15 +1,21 @@
 from pyRealtor.geo import GeoLocationService
-from pyRealtor.realtor import RealtorService
+from pyRealtor.realtor import Realtor
 from pyRealtor.report import ReportingService
 from pyRealtor.facade import HousesFacade
 from pyRealtor.proxy import Proxy
+from pyRealtor.realtorCa import RealtorCa
+from pyRealtor.realtorCom import RealtorCom
+from pyRealtor.realtorFactory import RealtorFactory
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 __all__ = [
     "GeoLocationService",
-    "RealtorService",
+    "Realtor",
     "ReportingService",
     "HousesFacade",
-    "Proxy"
+    "Proxy",
+    "RealtorCa",
+    "RealtorCom",
+    "RealtorFactory"
 ]

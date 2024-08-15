@@ -228,4 +228,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
 *.xlsx
+pyRealtor/test.py

@@ -2,6 +2,7 @@ import json
 import importlib.resources
 import pkg_resources
 import re
+import sys
 
 import pandas as pd
 
@@ -11,12 +12,15 @@ class ReportingService:
             self, 
             column_mapping_cfg_fpath:str = 'realtor_json_normalize_mapping.json', 
             column_lst: list = [
-        'MLS', 'Description', 'Bathrooms', 'Bedrooms', 'Size', 'Stories', 
-        'House Category', 'Ammenities', 
-        'Price', 'Address', 'Latitude', 'Longitude', 'Ownership Category', 'Nearby Ammenities', 'Open House', 'Website'
-    ]):
+                'MLS', 'Description', 'Bathrooms', 'Bedrooms', 'Size', 'Stories', 
+                'House Category', 'Ammenities', 
+                'Price', 'Address', 'Latitude', 'Longitude', 'Ownership Category', 'Nearby Ammenities', 'Open House', 'Website'
+            ],
+            summary_col_lst: list = ['Bedrooms', 'Bathrooms', 'House Category', 'Ownership Category']
+    ):
         self.house_json_lst = []
         self.column_lst = column_lst
+        self.summary_col_lst = summary_col_lst
         self.column_mapping_dict = self.load_mapping_cfg(
             config_path=column_mapping_cfg_fpath
         )
@@ -70,13 +74,15 @@ class ReportingService:
 
         return listing_dataframe
 
-    def get_average(self, dataframe: pd.DataFrame, average_col_name: str, grpby_col_lst: list):
+    def get_average(self, dataframe: pd.DataFrame, average_col_name: str):
         dataframe[average_col_name] = pd.to_numeric(dataframe[average_col_name])
+        dataframe['Bedrooms'] = dataframe['Bedrooms'].fillna('').astype("string")
+
         dataframe['Bedrooms'] = dataframe['Bedrooms'].apply(
             lambda row: 0 if row=='' else eval(row)
         )
         summary_df = dataframe.groupby(
-            grpby_col_lst,
+            self.summary_col_lst,
             as_index = True
         )[average_col_name].mean()
 

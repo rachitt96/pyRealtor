@@ -1,0 +1,68 @@
+search_function_graphql: >
+  query ConsumerSearchQuery(
+    $query: HomeSearchCriteria!
+    $limit: Int
+    $offset: Int
+    $sort: [SearchAPISort]
+    $sort_type: SearchSortType
+    $client_data: JSON
+    $bucket: SearchAPIBucket
+  ) {{
+    home_search: home_search(
+      query: $query
+      sort: $sort
+      limit: $limit
+      offset: $offset
+      sort_type: $sort_type
+      client_data: $client_data
+      bucket: $bucket
+    )
+    {SEARCH_COLUMNS}
+  }} 
+
+search_houses_columns: >
+  {{
+    count
+    total
+    properties: results {{
+      property_id
+      list_price
+      listing_id
+      list_date
+      description {{
+        beds
+        baths_consolidated
+        sqft
+        type
+        sold_price
+      }}
+      location {{
+        address {{
+          line
+          postal_code
+          state
+          state_code
+          city
+          coordinate {{
+            lat
+            lon
+          }}
+        }}
+      }}
+      {EXTRA_PROPERTIES_COLUMNS}
+    }}
+  }}
+
+property_open_house_columns: >
+  open_houses {
+    start_date
+    end_date
+  }
+
+realtor_brokerage_columns: >
+  branding {
+    type
+    name
+  }
+
+

@@ -39,7 +39,7 @@ class Proxy:
             )
 
             if proxy_check_resp.status_code == 200:
-                #print(proxy_check_resp.json())
+                print(proxy_check_resp.json())
                 self.current_proxy = proxy_str
         except Exception as e:
             self.rotation_index += 1

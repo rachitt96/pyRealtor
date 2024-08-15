@@ -12,10 +12,10 @@
 
 
 
-pyRealtor is a python package that provides fast and easy way to extract Multiple Listing Service (MLS) details from REALTOR.CA, such as house sale/rent price, number of bedrooms, stories, ammenities nearby etc. of any city / region within Canada. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
+pyRealtor is a python package that provides fast and easy way to extract Multiple Listing Service (MLS) details from REALTOR.CA and REALTOR.COM, such as house sale/rent price, number of bedrooms, stories, ammenities nearby etc. of any city / region within Canada or United States. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
 
 pyRealtor can be used to 
-- Analyze and extract all real estate listing in a specific area.
+- Analyze and extract all real estate listing in Canada or United States.
 - Find only **Open House** on a specifc day in a particular area.
 
 ## Installing
@@ -38,13 +38,37 @@ python setup.py install
 
 1. To get all real estate properties for sale in specific area
 
+If the area is within Canada, then pyRealtor will fetch listings from **REALTOR.CA**
+
 ```python
 import pyRealtor
 
 house_obj = pyRealtor.HousesFacade()
 house_obj.search_save_houses(
-    search_area='Barrhaven',
-    report_file_name='barrhaven_all_listings.xlsx'
+    search_area='Barrhaven'
+)
+```
+
+If the area is within **United States**, then pyRealtor will fetch listings from **REALTOR.COM** 
+
+```python
+import pyRealtor
+
+house_obj = pyRealtor.HousesFacade()
+house_obj.search_save_houses(
+    search_area='Bentonville'
+)
+```
+
+If the city/area name is common between United States and Canada, then by default pyRealtor will extract listings from either country. To externally request pyRealtor to fetch listing from a specific country:
+
+```python
+import pyRealtor
+
+house_obj = pyRealtor.HousesFacade()
+house_obj.search_save_houses(
+    search_area='Ottawa',
+    country='Canada'
 )
 ```
 
@@ -56,12 +80,11 @@ import pyRealtor
 house_obj = pyRealtor.HousesFacade()
 house_obj.search_save_houses(
     search_area='Barrhaven',
-    report_file_name='barrhaven_all_listings.xlsx',
     use_proxy=True
 )
 ```
 
-2. To get only Open House listings in a specific area
+2. To get only **Open House** listings in a specific area
 
 ```python
 import pyRealtor
@@ -69,7 +92,6 @@ import pyRealtor
 house_obj = pyRealtor.HousesFacade()
 house_obj.search_save_houses(
     search_area='CITY/SUBURB',
-    report_file_name='FILES_TO_LOAD_LISTINGS.xlsx',
     open_house_date = 'MM/DD/YYYY'
 )
 ```
@@ -80,7 +102,6 @@ import pyRealtor
 house_obj = pyRealtor.HousesFacade()
 house_obj.search_save_houses(
     search_area='Barrhaven',
-    report_file_name='barrhaven_all_listings.xlsx',
     open_house_date = '10/29/2023'
 )
 ```

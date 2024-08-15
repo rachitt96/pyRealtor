@@ -1,0 +1,18 @@
+{
+    "ID": "listing_id",
+    "Bathrooms": "description.baths_consolidated",
+    "Bedrooms": "description.beds",
+    "Size": "description.sqft",
+    "House Category": "description.type",
+    "Price": "list_price",
+    "street name": "location.address.line",
+    "city": "location.address.city",
+    "state": "location.address.state",
+    "Latitude": "location.address.coordinate.lat",
+    "Longitude": "location.address.coordinate.lon",
+    "Open House": "OpenHouse->start_date",
+    "Website": "permalink",
+    "Rent": "list_price",
+    "InsertedDate": "list_date",
+    "Realtor Brokerage": "branding->name"
+}
