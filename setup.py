@@ -8,7 +8,7 @@ with open("README.md", "r") as f:
 
 setup(
     name = 'pyRealtor',
-    version = '0.1.7',
+    version = '0.1.8',
     description = 'Python package for fetching and analyzing REALTOR.CA and REALTOR.COM MLS Listings',
     long_description = long_description,
     long_description_content_type = "text/markdown",
@@ -35,6 +35,10 @@ setup(
     ],
     include_package_data = True,
     package_data = {
-        'pyRealtor': ['config/column_mapping_cfg.json']
+        'pyRealtor': [
+            'config/column_mapping_cfg.json',
+            'config/column_mapping_cfg_realtor_com.json',
+            'config/graphql_queries.yml'
+        ]
     }
 )
