@@ -99,6 +99,9 @@ class RealtorCom(Realtor):
         self.search_api_params["open_house"]["min"] = open_house_date
         self.search_api_params["open_house"]["max"] = open_house_date
 
+    def transform(self, df):
+        return df
+
 
     def search_houses(self, use_proxy = False):
         search_result = None
@@ -182,7 +185,7 @@ class RealtorCom(Realtor):
                     params = self.search_api_params
                 )
 
-            print(realtor_api_response.status_code)
+            #print(realtor_api_response.status_code)
 
             if realtor_api_response.status_code == 200:
                 search_result = realtor_api_response.json()
@@ -192,7 +195,7 @@ class RealtorCom(Realtor):
                 total_current_page_listings = search_result["data"]["home_search"]["count"]
 
                 while total_current_page_listings > 0 or current_offset < total_available_listings:
-                    print(current_offset, total_available_listings, total_current_page_listings)
+                    #print(current_offset, total_available_listings, total_current_page_listings)
 
                     current_offset += total_current_page_listings
                     json_search_payload["variables"]['offset'] = current_offset
@@ -239,10 +242,13 @@ class RealtorCom(Realtor):
                         print(f"Total listings received: {listings_received}, no more proxies available to connect, please try after some time")
                     elif realtor_api_response.status_code == 200:
                         search_result = realtor_api_response.json()
-                        self.report_obj.house_json_lst.extend(search_result["data"]["home_search"]["properties"])
+                        if search_result["data"]["home_search"] is not None and search_result["data"]["home_search"]["count"] > 0:
+                            total_available_listings = search_result["data"]["home_search"]["total"]
+                            total_current_page_listings = search_result["data"]["home_search"]["count"]
+                            self.report_obj.house_json_lst.extend(search_result["data"]["home_search"]["properties"])
+                        else:
+                            break
 
-                        total_available_listings = search_result["data"]["home_search"]["total"]
-                        total_current_page_listings = search_result["data"]["home_search"]["count"]
                     elif realtor_api_response.status_code == 403:
                         print("IP address is blocked by REALTOR.COM, please try using Proxy with parameter use_proxy=True")
 

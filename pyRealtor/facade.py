@@ -135,6 +135,8 @@ class HousesFacade:
             ]
             print(f"Number of listings found after filtering: {houses_df.shape[0]}")
 
+        houses_df = realtor_service_obj.transform(df=houses_df)
+
         if get_summary:
             if listing_type == 'for_sale':
                 summary_df = realtor_service_obj.report_obj.get_average(
@@ -151,7 +153,7 @@ class HousesFacade:
                 """
                 summary_df = pd.DataFrame()
 
-        #print(houses_df)
+        print(houses_df)
 
         if houses_df.shape[0] > 0:
             realtor_service_obj.report_obj.save_excel(

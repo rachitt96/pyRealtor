@@ -35,6 +35,9 @@ class GeoLocationService:
 
         if "geojson" in geo_json:
             self.polygon_boundry = geo_json["geojson"]
+        
+        if "address" in geo_json:
+            self.address_json = geo_json["address"]
 
     def set_display_physical_location(self, physical_location: str):
         self.physical_location = physical_location
@@ -83,6 +86,8 @@ class GeoLocationService:
         if country.lower() == 'united states':
             api_params['polygon_geojson'] = 1
             is_polygon_boundry = True
+        elif country.lower() == "india":
+            api_params["addressdetails"] = 1
 
         try:
             geo_res = requests.get(

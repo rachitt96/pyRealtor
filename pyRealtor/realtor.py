@@ -24,6 +24,9 @@ class Realtor(ABC):
     def set_open_house_only(self, open_house_date):
         pass
 
+    @abstractmethod
+    def transform(self, df):
+        pass
 
     @abstractmethod
     def search_houses(self, use_proxy = False):

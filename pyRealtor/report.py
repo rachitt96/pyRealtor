@@ -33,6 +33,31 @@ class ReportingService:
         
         return config_dict
 
+    def get_json_value(self, json_data, key_chain):
+        if key_chain in json_data:
+            return json_data[key_chain]
+        elif key_chain.split(".")[0] in json_data:
+            key, value = key_chain.split(".", 1)
+            return self.get_json_value(
+                json_data[key],
+                value
+            )
+        elif key_chain.split("->")[0] in json_data:
+            key, value = key_chain.split("->", 1)
+            val_lst = [
+                    self.get_json_value(
+                        ele,
+                        value
+                    )
+                    for ele in json_data[key] 
+                ]
+            val_lst = [str(val).strip() for val in val_lst if val is not None]
+
+            return ";".join(filter(None, val_lst))
+            
+        else:
+            return None
+
 
     def to_dataframe(self):
         dataframe_values = []
@@ -42,8 +67,24 @@ class ReportingService:
             for col_to_report in self.column_lst:
                 json_copy = mls_listing_json.copy()
 
+                json_copy = self.get_json_value(json_copy, self.column_mapping_dict[col_to_report])
+                #json_copy = ";".join(filter(None, json_copy))
+
+                """
                 if "->" in self.column_mapping_dict[col_to_report]:
                     col_hierarchy_lst = self.column_mapping_dict[col_to_report].split("->")
+
+                    if "." in col_hierarchy_lst[0]:
+                        new_col_hierarchy_lst = col_hierarchy_lst[0].split(".")
+
+                        for col in new_col_hierarchy_lst[:-1]:
+                            if col in json_copy:
+                                json_copy = json_copy[col]
+                            else:
+                                json_copy = ''
+
+                        col_hierarchy_lst = new_col_hierarchy_lst[-1:] + col_hierarchy_lst[1:]
+
                     if (len(col_hierarchy_lst) == 2) and (col_hierarchy_lst[0] in json_copy):
                         json_copy = ";".join(
                             filter(
@@ -66,7 +107,9 @@ class ReportingService:
                             json_copy = json_copy[col_hierarchy]
                         else:
                             json_copy = ''
+                """
                 dataframe_row_values.append(json_copy)
+
             dataframe_values.append(dataframe_row_values)
         
         listing_dataframe = pd.DataFrame(dataframe_values, columns=self.column_lst)
@@ -75,16 +118,22 @@ class ReportingService:
         return listing_dataframe
 
     def get_average(self, dataframe: pd.DataFrame, average_col_name: str):
+        if (dataframe[average_col_name].dtype == 'object') and (dataframe[average_col_name].str.contains(';').any()):
+            dataframe[average_col_name] = dataframe[average_col_name].str.split(';')
+            dataframe[average_col_name] = dataframe[average_col_name].apply(lambda row: [float(x) for x in row if x!=''])
+            dataframe[average_col_name] = dataframe[average_col_name].apply(lambda row: sum(row)/len(row) if len(row)>0 else row)
         dataframe[average_col_name] = pd.to_numeric(dataframe[average_col_name])
         dataframe['Bedrooms'] = dataframe['Bedrooms'].fillna('').astype("string")
 
         dataframe['Bedrooms'] = dataframe['Bedrooms'].apply(
-            lambda row: 0 if row=='' else eval(row)
+            lambda row: 0 if row=='' else row if ";" in row else eval(row)
         )
         summary_df = dataframe.groupby(
             self.summary_col_lst,
             as_index = True
         )[average_col_name].mean()
+
+        summary_df = summary_df.rename('Average '+average_col_name)
 
         return summary_df
 

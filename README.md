@@ -12,10 +12,10 @@
 
 
 
-pyRealtor is a python package that provides fast and easy way to extract Multiple Listing Service (MLS) details from REALTOR.CA and REALTOR.COM, such as house sale/rent price, number of bedrooms, stories, ammenities nearby etc. of any city / region within Canada or United States. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
+pyRealtor is a python package that provides fast and easy way to extract Multiple Listing Service (MLS) details, from REALTOR.CA, REALTOR.COM and HOUSING.COM, of any city / region within Canada, United States or India. The library provides functionality to easily store the extracted data in excel sheet for further analysis. 
 
 pyRealtor can be used to 
-- Analyze and extract all real estate listing in Canada or United States.
+- Analyze and extract all real estate listing in Canada, United States, India.
 - Find only **Open House** on a specifc day in a particular area.
 
 ## Installing
@@ -60,7 +60,18 @@ house_obj.search_save_houses(
 )
 ```
 
-If the city/area name is common between United States and Canada, then by default pyRealtor will extract listings from either country. To externally request pyRealtor to fetch listing from a specific country:
+If the area is within **India**, then pyRealtor will fetch listings from **HOUSING.COM** 
+
+```python
+import pyRealtor
+
+house_obj = pyRealtor.HousesFacade()
+house_obj.search_save_houses(
+    search_area='Vastrapur'
+)
+```
+
+If the city/area name is **common between multiple countries**, then by default pyRealtor will extract listings from any country. To externally request pyRealtor to fetch listing from a specific country:
 
 ```python
 import pyRealtor
@@ -69,6 +80,16 @@ house_obj = pyRealtor.HousesFacade()
 house_obj.search_save_houses(
     search_area='Ottawa',
     country='Canada'
+)
+```
+
+```python
+import pyRealtor
+
+house_obj = pyRealtor.HousesFacade()
+house_obj.search_save_houses(
+    search_area='whitefield',
+    country='India'
 )
 ```
 
@@ -105,6 +126,7 @@ house_obj.search_save_houses(
     open_house_date = '10/29/2023'
 )
 ```
+(Note: Open House filter functionality is only available within Canadian region through REALTOR.CA.)
 
 ### Terms of Use
 

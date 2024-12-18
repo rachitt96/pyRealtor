@@ -1,5 +1,6 @@
 from pyRealtor.realtorCa import RealtorCa
 from pyRealtor.realtorCom import RealtorCom
+from pyRealtor.housingCom import HousingCom
 from pyRealtor.report import ReportingService
 
 
@@ -11,6 +12,8 @@ class RealtorFactory:
             config = "config/column_mapping_cfg.json"
         elif config is None and country == "United States":
             config = "config/column_mapping_cfg_realtor_com.json"
+        elif config is None and country == "India":
+            config = "config/column_mapping_cfg_housing_com.json"
 
         if country == 'Canada':
             realtor_service_obj = RealtorCa(
@@ -35,7 +38,20 @@ class RealtorFactory:
                     summary_col_lst = ['Bedrooms', 'Bathrooms', 'House Category']
                 )
             )
+        elif country == 'India':
+            realtor_service_obj = HousingCom(
+                ReportingService(
+                    column_mapping_cfg_fpath = config,
+                    column_lst = [
+                        'ID', 'Bedrooms', 'Bathrooms', 'Size', 
+                        'House Category', 
+                        'Price', 'Address', "Realtor Brokerage", "Website", "Latitude", "Longitude", "InsertedDate",
+                        "SubID", "label", "SubSize", "SubPrice"
+                    ],
+                    summary_col_lst = ['Bedrooms',  'House Category']
+                )
+            )
         else:
-            raise ValueError(f"Expected countries are United States or Canada, however received {country}")
+            raise ValueError(f"Expected countries are United States, Canada, or India, however received {country}")
         
         return realtor_service_obj

@@ -1,0 +1,453 @@
+city_list_function: >
+  query($service: String, $category: String) {
+    cityListing(service: $service, category: $category) {
+      topCities {
+        name
+        id
+        cityId
+        products
+      }
+      otherCities {
+        name
+        id
+        cityId
+        products
+      }
+    }
+  }
+
+type_ahead_function: >
+  query($searchQuery: SearchQueryInput!, $variant: String) {
+    typeAhead(searchQuery: $searchQuery, variant: $variant) {
+      results {
+        id
+        name
+        displayType
+        type
+        subType
+        url
+        canonical
+        mobileUrl
+        center
+        uniqueId
+      }
+      defaultUrl
+      isCrossCitySearch
+    }
+  }
+
+hash_function: >
+  query(
+    $pageType: String
+    $entityId: String
+    $fString: String
+    $text: String
+    $city: CityInput
+    $meta: JSON
+    $hash: String
+    $service: String
+    $category: String
+  ) {
+    searchHash(
+      pageType: $pageType
+      entityId: $entityId
+      fString: $fString
+      text: $text
+      city: $city
+      meta: $meta
+      hash: $hash
+      service: $service
+      category: $category
+    ) {
+      hash
+    }
+  }
+
+search_function: >
+  fragment PR on Property {
+    features {
+      label
+      description
+      id
+    }
+    coverImage {
+      src
+      alt
+      videoUrl
+    }
+    polygonsHash
+    creditScore
+    currentPossessionStatus
+    hasAutoVideo
+    imageCount
+    propertyType
+    title
+    subtitle
+    isUc
+    isActiveProperty
+    isMostContacted
+    isRecentlyAdded
+    galleryTitle
+    tracking
+    price
+    displayPrice {
+      value
+      displayValue
+      description
+      unit
+      deposit
+      brokerage
+      maintenance
+      displayMaintenance
+      displayDeposit
+      displayBrokerage
+      totalRent
+      brokerageDuration
+      depositDuration
+      displayParkingCharges
+      displayPaintingCharges
+      paintingDuration
+      lockInPeriod
+    }
+    address {
+      address
+      url
+      detailedPropertyAddress {
+        url
+        val
+      }
+      distanceFromEntity
+    }
+    url
+    label
+    badge
+    ownerListingBadge
+    listingId
+    postedDate
+    originalListingId
+    promotions
+    customOffers
+    suggestedOffers
+    coords
+    propertyInformation
+    tags
+    furnishingType
+    builtUpArea {
+      value
+      unit
+    }
+    sellerCount
+    meta
+    sellers {
+      ...BS
+      phone {
+        partialValue
+      }
+      isCertifiedAgent
+      sellerTag
+      adDeficit
+      meta
+      contactPersonId
+    }
+    emi
+    brands {
+      name
+    }
+    details {
+      sliceViewUrl
+      images {
+        type
+        images {
+          src
+          alt
+          aspectRatio
+          isSvOrDcVerified
+          category
+          caption
+          tag
+          type
+        }
+      }
+      config {
+        displayAreaType
+        propertyConfig {
+          key
+          label
+          propertyTypeName
+          data {
+            id
+            price {
+              value
+              displayValue
+              unit
+            }
+            areaConfig {
+              name
+              areaInfo {
+                value
+                unit
+                displayArea
+              }
+            }
+            projectAttributes {
+              reraIdStatus
+            }
+          }
+        }
+      }
+      propertyConfigs {
+        id
+        icon
+        label
+        description
+        meta
+        showOnMobile
+        mobileLabel
+        formattedDescription
+      }
+    }
+    minDistanceLocality {
+      distance
+      name
+    }
+    isAuctionFlat
+    photoUnderReview
+    propertyTags
+    isMyGateCertified
+    isExclusiveProperty
+  }
+  fragment SR on Property {
+    ...PR
+    certifiedDetails {
+      isVerifiedProperty
+      similarPropertyKeys
+      isCertifiedProperty
+    }
+    description {
+      overviewDescription
+      highlights
+    }
+    videoTour {
+      startDate
+      endDate
+      url
+      meetingNumber
+    }
+    highlights
+    brands {
+      name
+      image
+      theme {
+        color
+      }
+      url
+    }
+    boostedAs
+  }
+  fragment BS on User {
+    name
+    id
+    image
+    firmName
+    url
+    type
+    isPrime
+    sellerBadge
+    isPaid
+    designation
+    formattedCustomerServedCount
+  }
+  fragment Ad on SearchResults {
+    nearbyProperties {
+      ...SR
+      nearByPlaces {
+        establishmentType
+        name
+        distance
+        travelDistance
+        duration
+      }
+    }
+    promotedProperties {
+      type
+      properties {
+        ...PR
+        videoConnectAvailable
+        micrositeRedirectionURL
+      }
+    }
+    recentlyAddedProperties @include(if: $isRent) {
+      ...SR
+      videoConnectAvailable
+      updatedAt
+      digitour {
+        url
+      }
+      socialUrgency {
+        msg
+      }
+      socialContext {
+        msg
+      }
+    }
+    ownerNearbyProperties {
+      ...SR
+    }
+    collections {
+      title
+      subTitle
+      image
+      propertyCount
+      url
+      key
+    }
+    sellers @include(if: $addSellersData) {
+      name
+      id
+      image
+      firmName
+      url
+      type
+      isPrime
+      sellerBadge
+      isPaid
+      designation
+      stats {
+        label
+        description
+      }
+      meta
+      description
+      sellerDescription
+      cities {
+        id
+        name
+        image
+      }
+      phone {
+        partialValue
+      }
+    }
+  }
+  query(
+    $pageInfo: PageInfoInput
+    $city: CityInput
+    $hash: String!
+    $service: String!
+    $category: String!
+    $meta: JSON
+    $adReq: Boolean!
+    $getStructured: Boolean!
+    $fltcnt: String
+    $isRent: Boolean!
+    $isLandmarkSearchActive: Boolean
+    $addSellersData: Boolean!
+    $interestLedFilter: String
+    $isMapSearch: Boolean
+    $lat: Float
+    $lng: Float
+    $outerRadius: Float
+  ) {
+    searchResults(
+      hash: $hash
+      service: $service
+      category: $category
+      city: $city
+      pageInfo: $pageInfo
+      meta: $meta
+      fltcnt: $fltcnt
+      isLandmarkSearchActive: $isLandmarkSearchActive
+      interestLedFilter: $interestLedFilter
+      isMapSearch: $isMapSearch
+      lat: $lat
+      lng: $lng
+      outerRadius: $outerRadius
+    ) {
+      properties {
+        ...SR
+        videoConnectAvailable
+        updatedAt
+        updatedAtStr
+        verifiedAt
+        digitour {
+          url
+        }
+        nearByPlaces {
+          establishmentType
+          name
+          distance
+          travelDistance
+          duration
+        }
+        socialUrgency {
+          msg
+        }
+        socialContext {
+          msg
+        }
+        isBrokerageChargeable
+        reviewRating
+        showNewLaunch
+        isTitanium
+        isLocalityChampion
+        distanceFromCoords
+        details {
+          brochure {
+            pdf
+            name
+            hasBrochure
+          }
+        }
+        insights {
+          id
+          value
+        }
+        coverImageUrl
+      }
+      ...Ad @include(if: $adReq)
+      config {
+        filters
+        pageInfo {
+          totalCount
+          size
+          page
+        }
+        entities {
+          id
+          type
+          locationCoordinates
+        }
+      }
+      meta
+      structuredData @include(if: $getStructured)
+      socialProofingIndexes
+      npoPropertiesData {
+        totalCount
+        properties {
+          ...SR
+          videoConnectAvailable
+          updatedAt
+          digitour {
+            url
+          }
+          nearByPlaces {
+            establishmentType
+            name
+            distance
+            travelDistance
+            duration
+          }
+          socialUrgency {
+            msg
+          }
+          socialContext {
+            msg
+          }
+          isBrokerageChargeable
+          reviewRating
+          showNewLaunch
+          distanceFromCoords
+        }
+      }
+    }
+  }

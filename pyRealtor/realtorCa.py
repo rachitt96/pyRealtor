@@ -108,6 +108,9 @@ class RealtorCa(Realtor):
             raise Exception(f"col_name must be either Price or Rent, however found {col_name}")
         api_param_key = f"{col_name}Min"
         self.search_api_params[api_param_key] = new_amount
+
+    def transform(self, df):
+        return df
     
     def search_houses(self, use_proxy = False):
         search_result = None

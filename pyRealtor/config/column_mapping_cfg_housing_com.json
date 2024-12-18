@@ -1,0 +1,19 @@
+{
+    "ID": "listingId",
+    "Bathrooms": "propertyInformation.bathrooms",
+    "Bedrooms": "propertyInformation.bedrooms",
+    "Size": "propertyInformation.area",
+    "House Category": "details.config.propertyConfig->propertyTypeName",
+    "Price": "displayPrice.value",
+    "Rent": "displayPrice.value",
+    "Address": "address.detailedPropertyAddress->val",
+    "Realtor Brokerage": "sellers->name",
+    "Website": "url",
+    "Latitude": "coords",
+    "Longitude": "coords",
+    "InsertedDate": "postedDate",
+    "SubID": "details.config.propertyConfig->data->id",
+    "SubSize": "details.config.propertyConfig->data->areaConfig->areaInfo.value",
+    "label": "details.config.propertyConfig->label",
+    "SubPrice": "details.config.propertyConfig->data->price.value"
+}
