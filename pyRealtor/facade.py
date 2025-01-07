@@ -13,6 +13,7 @@ class HousesFacade:
         search_area: str,
         report_file_name: str = None,
         country: str = None,
+        state: str = None,
         listing_type: str = 'for_sale',
         use_proxy: bool = False, 
         get_summary: bool = True,
@@ -35,7 +36,11 @@ class HousesFacade:
             config = column_mapping_cfg_fpath
         )
 
-        geo_result_json = geo_service_obj.search_geo_location(city=search_area, country=country)
+        geo_result_json = geo_service_obj.search_geo_location(
+            city=search_area,
+            province=state,
+            country=country
+        )
 
         display_address = geo_result_json["name"]
         geo_service_obj.set_display_physical_location(display_address)

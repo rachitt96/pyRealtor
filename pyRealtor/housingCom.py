@@ -106,7 +106,7 @@ class HousingCom(Realtor):
 
             houses_sub_df[['House Category', 'SubID', 'label', 'SubSize', 'SubPrice']] = houses_sub_df[['House Category', 'SubID', 'label', 'SubSize', 'SubPrice']].apply(lambda x: x.str.split(";"), axis=0)
             houses_sub_df['House Category'] = houses_sub_df['House Category'].apply(lambda x: list(set(x)))
-            houses_sub_df['label'] = houses_sub_df['label'].apply(lambda label: [m.group(1) for m in map(re.compile('^(\d+).*$').match, label) if m])
+            houses_sub_df['label'] = houses_sub_df['label'].apply(lambda label: [m.group(1) for m in map(re.compile(r'^(\d+).*$').match, label) if m])
 
             match_ids = (houses_sub_df['label'].map(len) == houses_sub_df['SubPrice'].map(len)) \
                 & (houses_sub_df['label'].map(len) == houses_sub_df['SubSize'].map(len))
@@ -130,7 +130,7 @@ class HousingCom(Realtor):
         houses_df['Latitude'] = houses_df['Latitude'].apply(lambda coord: coord[0])
         houses_df['Longitude'] = houses_df['Longitude'].apply(lambda coord: coord[1])
 
-        size_pattern = re.compile('^(\d+).*$')
+        #size_pattern = re.compile(r'^(\d+).*$')
         #houses_df['Size'] = houses_df['Size'].apply(lambda size: re.match(size_pattern, size).group(1) if re.match(size_pattern, size) else size)
         houses_df['Price'] = houses_df['Price'].apply(lambda price: ";".join(str(x) for x in price) if isinstance(price, list) else price)
         houses_df['House Category'] = houses_df['House Category'].apply(lambda cat: ";".join(str(x) for x in cat) if isinstance(cat, list) else cat)
