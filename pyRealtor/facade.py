@@ -19,6 +19,7 @@ class HousesFacade:
         get_summary: bool = True,
         price_from: int = None,
         sorted_col_name:str = None,
+        sorted_col_asc:bool = True,
         realtor_name_filter: str = None,
         realtor_brokerage_filter: str = None,
         column_mapping_cfg_fpath:str = None, 
@@ -29,7 +30,7 @@ class HousesFacade:
         geo_service_obj = GeoLocationService()
 
         if country is None:
-            country = geo_service_obj.get_country(city = search_area)
+            country = geo_service_obj.get_country(city = search_area, state=state)
 
         realtor_service_obj = RealtorFactory().get_realtor(
             country = country,
@@ -66,7 +67,7 @@ class HousesFacade:
             )
 
         if sorted_col_name is not None:
-            realtor_service_obj.set_sort_method(by=sorted_col_name, ascending_order=True)
+            realtor_service_obj.set_sort_method(by=sorted_col_name, ascending_order=sorted_col_asc)
 
         if 'open_house_date' in kwargs:
             open_house_date = kwargs['open_house_date']
@@ -78,9 +79,10 @@ class HousesFacade:
             if 'Realtor Brokerage' not in column_lst:
                 realtor_service_obj.report_obj.column_lst.column_lst.append('Realtor Brokerage')
 
-        houses_df = realtor_service_obj.search_houses(
+        self.houses_df_preprocess = realtor_service_obj.search_houses(
             use_proxy
         ).to_dataframe()
+        houses_df = self.houses_df_preprocess
 
         loop_counter = 0
 
@@ -140,7 +142,8 @@ class HousesFacade:
             ]
             print(f"Number of listings found after filtering: {houses_df.shape[0]}")
 
-        houses_df = realtor_service_obj.transform(df=houses_df)
+        self.houses_df = realtor_service_obj.transform(df=houses_df)
+        houses_df = self.houses_df
 
         if get_summary:
             if listing_type == 'for_sale':

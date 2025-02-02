@@ -42,14 +42,18 @@ class GeoLocationService:
     def set_display_physical_location(self, physical_location: str):
         self.physical_location = physical_location
 
-    def get_country(self, city:str):
+    def get_country(self, city:str, state:str = None):
         country_name = ""
         max_importance = 0
         api_params = {
             'city': city,
             'addressdetails': 1,
-            'format': 'json'
+            'format': 'json',
+            'countrycodes': 'ca,in,us'
         }
+
+        if state:
+            api_params['state'] = state
 
         try:
             geo_res = requests.get(

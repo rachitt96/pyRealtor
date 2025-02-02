@@ -8,14 +8,16 @@ class RealtorFactory:
 
     def get_realtor(self, country: str, config: str = None):
 
-        if config is None and country == "Canada":
+        country = country.lower()
+
+        if config is None and country == "canada":
             config = "config/column_mapping_cfg.json"
-        elif config is None and country == "United States":
+        elif config is None and country == "united states":
             config = "config/column_mapping_cfg_realtor_com.json"
-        elif config is None and country == "India":
+        elif config is None and country == "india":
             config = "config/column_mapping_cfg_housing_com.json"
 
-        if country == 'Canada':
+        if country == 'canada':
             realtor_service_obj = RealtorCa(
                 ReportingService(
                     column_mapping_cfg_fpath = config,
@@ -27,7 +29,7 @@ class RealtorFactory:
                     summary_col_lst = ['Bedrooms', 'Bathrooms', 'House Category', 'Ownership Category']
                 )
             )
-        elif country == 'United States':
+        elif country == 'united states':
             realtor_service_obj = RealtorCom(
                 ReportingService(
                     column_mapping_cfg_fpath = config,
@@ -38,7 +40,7 @@ class RealtorFactory:
                     summary_col_lst = ['Bedrooms', 'Bathrooms', 'House Category']
                 )
             )
-        elif country == 'India':
+        elif country == 'india':
             realtor_service_obj = HousingCom(
                 ReportingService(
                     column_mapping_cfg_fpath = config,

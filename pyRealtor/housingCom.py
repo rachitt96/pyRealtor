@@ -95,7 +95,7 @@ class HousingCom(Realtor):
         pass
 
     def transform(self, df):
-        if set(['SubID', 'label', 'SubSize', 'SubPrice']).intersection(set(houses_df.columns.values)):
+        if set(['SubID', 'label', 'SubSize', 'SubPrice']).intersection(set(df.columns.values)):
             sub_id_only = df['SubID'].str.contains(";")
 
             houses_sub_df = df[sub_id_only == True]

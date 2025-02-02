@@ -237,3 +237,4 @@ $RECYCLE.BIN/
 *.xlsx
 *.mp4
 pyRealtor/test.py
+UI/*

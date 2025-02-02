@@ -128,6 +128,7 @@ class ReportingService:
         dataframe['Bedrooms'] = dataframe['Bedrooms'].apply(
             lambda row: 0 if row=='' else row if ";" in row else eval(row)
         )
+
         summary_df = dataframe.groupby(
             self.summary_col_lst,
             as_index = True
