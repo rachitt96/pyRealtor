@@ -169,3 +169,33 @@ class HousesFacade:
                 file_path_to_save,
                 summary_df
             )
+
+    def search_by_listing_id(
+        self, 
+        listing_id: str, 
+        country: str = 'Canada', 
+        use_proxy: bool = False
+    ):
+        """ Get the listing details for a specific listing id
+        
+        Args:
+            listing_id (str): Real Estate Website's listing id 
+            country (str): Country Name 
+            use_proxy (bool): To use proxies for hiding your IP Address while fetching data
+        
+        Returns:
+            DataFrame: pandas dataframe with the listing details
+        """
+        
+        if country.lower() != 'canada':
+            raise ValueError(f"Expecting Canada as country name, however received {country}")
+        
+        mls_df = RealtorFactory().get_realtor(
+            country = country
+        ).set_listing_id(
+            listing_id
+        ).search_houses(
+            use_proxy
+        ).to_dataframe()
+
+        return mls_df
