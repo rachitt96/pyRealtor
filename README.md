@@ -20,17 +20,10 @@ pyRealtor can be used to
 
 ## Installing
 
-- The easiest way to install the library is to execute (preferably in a virtualenv) the command:
+The easiest way to install the library is to execute (preferably in a virtualenv) the command:
 
 ```shell
 pip install pyRealtor
-```
-
-- From the source code
-```shell
-git clone https://github.com/rachitt96/pyRealtor.git
-cd pyRealtor
-python setup.py install
 ```
 
 
