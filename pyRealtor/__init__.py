@@ -7,7 +7,7 @@ from pyRealtor.realtorCa import RealtorCa
 from pyRealtor.realtorCom import RealtorCom
 from pyRealtor.realtorFactory import RealtorFactory
 
-__version__ = "0.2.3"
+__version__ = "0.2.5"
 
 __all__ = [
     "GeoLocationService",

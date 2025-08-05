@@ -66,8 +66,12 @@ class HousesFacade:
                 col_name = sorted_col_name
             )
 
+        temp_col_name = sorted_col_name
         if sorted_col_name is not None:
-            realtor_service_obj.set_sort_method(by=sorted_col_name, ascending_order=sorted_col_asc)
+            
+            if sorted_col_name == 'Price':
+                temp_col_name = 'listing_price'
+            realtor_service_obj.set_sort_method(by=temp_col_name, ascending_order=sorted_col_asc)
 
         if 'open_house_date' in kwargs:
             open_house_date = kwargs['open_house_date']
@@ -86,7 +90,7 @@ class HousesFacade:
 
         loop_counter = 0
 
-        if houses_df.shape[0] > 0 and sorted_col_name == 'listing_price':
+        if houses_df.shape[0] > 0 and temp_col_name == 'listing_price':
 
             current_min_amount = pd.to_numeric(
                 houses_df[sorted_col_name],
